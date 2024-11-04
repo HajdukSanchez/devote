@@ -10,6 +10,7 @@ import CoreData
 
 struct ContentView: View {
     // MARK: - Properties
+    
     // Property to handle CRUD behavior with the entities
     @Environment(\.managedObjectContext) private var viewContext
     // Property to get the data that match the specific criterias we define
@@ -17,12 +18,20 @@ struct ContentView: View {
         sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
         animation: .default)
     private var items: FetchedResults<Item>
+    
+    @State var taskText: String = ""
+    private var isButtonDisabled: Bool {
+        taskText.isEmpty
+    }
 
     // MARK: - Functions
     private func addItem() {
         withAnimation {
             let newItem = Item(context: viewContext)
             newItem.timestamp = Date()
+            newItem.task = taskText
+            newItem.completion = false
+            newItem.id = UUID()
 
             do {
                 try viewContext.save()
@@ -30,6 +39,9 @@ struct ContentView: View {
                 let nsError = error as NSError
                 fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
             }
+            
+            taskText = ""
+            hideKeyboard()
         }
     }
 
@@ -48,27 +60,54 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp!, formatter: itemFormatter)")
+            VStack {
+                VStack(spacing: 16) {
+                    TextField("New Task", text: $taskText)
+                        .padding()
+                        .background(
+                            Color(UIColor.systemGray6)
+                        )
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                    Button {
+                        addItem()
                     } label: {
-                        Text(item.timestamp!, formatter: itemFormatter)
+                        Spacer()
+                        Text("SAVE")
+                        Spacer()
                     }
+                    .disabled(isButtonDisabled)
+                    .padding()
+                    .font(.headline)
+                    .foregroundStyle(.white)
+                    .background(isButtonDisabled ? .gray: .pink)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
                 }
-                .onDelete(perform: deleteItems)
+                .padding()
+                List {
+                    ForEach(items) { item in
+                        NavigationLink {
+                            Text("Item at \(item.timestamp!, formatter: itemFormatter)")
+                        } label: {
+                            VStack(alignment: .leading) {
+                                Text(item.task ?? "No task")
+                                    .font(.headline)
+                                    .fontWeight(.bold)
+                                Text(item.timestamp!, formatter: itemFormatter)
+                                    .font(.footnote)
+                                    .foregroundStyle(.gray)
+                            }
+                        }
+                    }
+                    .onDelete(perform: deleteItems)
+                }
             }
+            .navigationTitle("Daily Tasks")
+            .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     EditButton()
                 }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
             }
-            Text("Select an item")
         }
     }
 }
