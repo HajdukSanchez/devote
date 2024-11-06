@@ -59,48 +59,60 @@ struct ContentView: View {
     }
     
     var body: some View {
-        NavigationView {
-            VStack {
-                VStack(spacing: 16) {
-                    TextField("New Task", text: $taskText)
-                        .padding()
-                        .background(
-                            Color(UIColor.systemGray6)
-                        )
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                    Button {
-                        addItem()
-                    } label: {
-                        Spacer()
-                        Text("SAVE")
-                        Spacer()
-                    }
-                    .disabled(isButtonDisabled)
-                    .padding()
-                    .font(.headline)
-                    .foregroundStyle(.white)
-                    .background(isButtonDisabled ? .gray: .pink)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                }
-                .padding()
-                List {
-                    ForEach(items) { item in
-                        NavigationLink {
-                            Text("Item at \(item.timestamp!, formatter: itemFormatter)")
+        NavigationStack {
+            ZStack {
+                VStack {
+                    VStack(spacing: 16) {
+                        TextField("New Task", text: $taskText)
+                            .padding()
+                            .background(
+                                Color(UIColor.systemGray6)
+                            )
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                        Button {
+                            addItem()
                         } label: {
-                            VStack(alignment: .leading) {
-                                Text(item.task ?? "No task")
-                                    .font(.headline)
-                                    .fontWeight(.bold)
-                                Text(item.timestamp!, formatter: itemFormatter)
-                                    .font(.footnote)
-                                    .foregroundStyle(.gray)
+                            Spacer()
+                            Text("SAVE")
+                            Spacer()
+                        }
+                        .disabled(isButtonDisabled)
+                        .padding()
+                        .font(.headline)
+                        .foregroundStyle(.white)
+                        .background(isButtonDisabled ? .gray: .pink)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                    }
+                    .padding()
+                    List {
+                        ForEach(items) { item in
+                            NavigationLink {
+                                Text("Item at \(item.timestamp!, formatter: itemFormatter)")
+                            } label: {
+                                VStack(alignment: .leading) {
+                                    Text(item.task ?? "No task")
+                                        .font(.headline)
+                                        .fontWeight(.bold)
+                                    Text(item.timestamp!, formatter: itemFormatter)
+                                        .font(.footnote)
+                                        .foregroundStyle(.gray)
+                                }
                             }
                         }
+                        .onDelete(perform: deleteItems)
                     }
-                    .onDelete(perform: deleteItems)
+                    .listStyle(InsetGroupedListStyle())
+                    .scrollContentBackground(.hidden) // Delete default Bg color on list
+                    .shadow(
+                        color: Color(red: 0, green: 0, blue: 0, opacity: 0.3),
+                        radius: 12
+                    )
+                    .padding(.vertical, 0)
+                    .frame(maxWidth: 640)
                 }
             }
+            .background(BackgroundImageView())
+            .background(backgroundGradient)
             .navigationTitle("Daily Tasks")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {

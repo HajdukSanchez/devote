@@ -15,28 +15,16 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
-				Model/Devote.xcdatamodeld,
 			);
 			target = CD4F18C02CD04AA70013714E /* Devote */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
-/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		B1AE5FD62CD9502B00E604FD /* Exceptions for "Devote" folder in "Compile Sources" phase from "Devote" target */ = {
-			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
-			buildPhase = CD4F18BD2CD04AA70013714E /* Sources */;
-			membershipExceptions = (
-				Model/Devote.xcdatamodeld,
-			);
-		};
-/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		B1AE5FCA2CD9502B00E604FD /* Devote */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				B1AE5FD52CD9502B00E604FD /* Exceptions for "Devote" folder in "Devote" target */,
-				B1AE5FD62CD9502B00E604FD /* Exceptions for "Devote" folder in "Compile Sources" phase from "Devote" target */,
 			);
 			path = Devote;
 			sourceTree = "<group>";
