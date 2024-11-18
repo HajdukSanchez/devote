@@ -18,33 +18,9 @@ struct ContentView: View {
         sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
         animation: .default)
     private var items: FetchedResults<Item>
-    
-    @State var taskText: String = ""
-    private var isButtonDisabled: Bool {
-        taskText.isEmpty
-    }
+    @State private var showNewtaskItem : Bool = false
 
     // MARK: - Functions
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
-            newItem.task = taskText
-            newItem.completion = false
-            newItem.id = UUID()
-
-            do {
-                try viewContext.save()
-            } catch {
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-            
-            taskText = ""
-            hideKeyboard()
-        }
-    }
-
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
             offsets.map { items[$0] }.forEach(viewContext.delete)
@@ -62,28 +38,29 @@ struct ContentView: View {
         NavigationStack {
             ZStack {
                 VStack {
-                    VStack(spacing: 16) {
-                        TextField("New Task", text: $taskText)
-                            .padding()
-                            .background(
-                                Color(UIColor.systemGray6)
-                            )
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                        Button {
-                            addItem()
-                        } label: {
-                            Spacer()
-                            Text("SAVE")
-                            Spacer()
+                    Spacer(minLength: 80)
+                    Button {
+                        withAnimation {
+                            showNewtaskItem.toggle()
                         }
-                        .disabled(isButtonDisabled)
-                        .padding()
-                        .font(.headline)
-                        .foregroundStyle(.white)
-                        .background(isButtonDisabled ? .gray: .pink)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                    } label: {
+                        Image(systemName: "plus.circle")
+                            .font(.system(size: 30, weight: .semibold, design: .rounded))
+                        Text("New Task")
+                            .font(.system(size: 24, weight: .bold, design: .rounded))
                     }
-                    .padding()
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 15)
+                    .background(
+                        LinearGradient(
+                            gradient: Gradient(colors: [.pink, .blue]),
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                        .clipShape(Capsule())
+                    )
+                    .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.25), radius: 8, x: 0, y: 4)
                     List {
                         ForEach(items) { item in
                             NavigationLink {
@@ -109,6 +86,16 @@ struct ContentView: View {
                     )
                     .padding(.vertical, 0)
                     .frame(maxWidth: 640)
+                }
+                
+                if showNewtaskItem {
+                    BlankView()
+                        .onTapGesture {
+                            withAnimation {
+                                showNewtaskItem.toggle()
+                            }
+                        }
+                    NewTaskItemView(isShowing: $showNewtaskItem)
                 }
             }
             .background(BackgroundImageView())
