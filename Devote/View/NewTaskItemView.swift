@@ -10,6 +10,7 @@ import SwiftUI
 struct NewTaskItemView: View {
     
     // MARK: - Properties
+    @AppStorage(isDarkModeKey) private var isDarkMode: Bool = false
     @Environment(\.managedObjectContext) private var viewContext
     @State private var taskText: String = ""
     private var isButtonDisabled: Bool {
@@ -48,7 +49,7 @@ struct NewTaskItemView: View {
                     .font(.system(size: 24, weight: .bold, design: .rounded))
                     .padding()
                     .background(
-                        Color(UIColor.systemGray6)
+                        isDarkMode ? Color(UIColor.tertiarySystemBackground) : Color(UIColor.secondarySystemBackground)
                     )
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                 Button {
@@ -67,7 +68,9 @@ struct NewTaskItemView: View {
             }
             .padding(.horizontal)
             .padding(.vertical, 20)
-            .background(Color.white)
+            .background(
+                isDarkMode ? Color(UIColor.secondarySystemBackground) : Color.white
+            )
             .clipShape(RoundedRectangle(cornerRadius: 16))
             .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.65), radius: 24)
             .frame(maxWidth: 640)

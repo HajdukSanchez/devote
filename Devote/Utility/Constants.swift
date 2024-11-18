@@ -25,3 +25,6 @@ var backgroundGradient: LinearGradient {
 }
 
 // MARK: - UX
+
+// MARK: - App Storage constants
+let isDarkModeKey: String = "isDarkMode"

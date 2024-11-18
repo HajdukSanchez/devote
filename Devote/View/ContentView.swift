@@ -11,6 +11,7 @@ import CoreData
 struct ContentView: View {
     // MARK: - Properties
     
+    @AppStorage(isDarkModeKey) private var isDarkMode: Bool = false
     // Property to handle CRUD behavior with the entities
     @Environment(\.managedObjectContext) private var viewContext
     // Property to get the data that match the specific criterias we define
@@ -38,6 +39,31 @@ struct ContentView: View {
         NavigationStack {
             ZStack {
                 VStack {
+                    HStack(spacing: 10) {
+                        Text("Devote")
+                            .font(.system(.largeTitle, design: .rounded))
+                            .fontWeight(.heavy)
+                            .padding(.leading, 4)
+                        Spacer()
+                        EditButton()
+                            .font(.system(size: 16, weight: .semibold, design: .rounded))
+                            .padding(.horizontal, 10)
+                            .frame(minWidth: 70, minHeight: 24)
+                            .background(
+                                Capsule()
+                                    .stroke(.white, lineWidth: 2)
+                            )
+                        Button {
+                            isDarkMode.toggle()
+                        } label: {
+                            Image(systemName: isDarkMode ? "moon.circle.fill" : "moon.circle")
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .font(.system(.title, design: .rounded))
+                        }
+                    }
+                    .padding()
+                    .foregroundStyle(.white)
                     Spacer(minLength: 80)
                     Button {
                         withAnimation {
@@ -102,15 +128,16 @@ struct ContentView: View {
             .background(backgroundGradient)
             .navigationTitle("Daily Tasks")
             .navigationBarTitleDisplayMode(.large)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-            }
+            .toolbar(.hidden)
         }
     }
 }
 
 #Preview {
-    ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    @Previewable @AppStorage(isDarkModeKey) var isDarkMode: Bool = false
+    let persistenceController = PersistenceController.preview
+    
+    ContentView()
+        .environment(\.managedObjectContext, persistenceController.container.viewContext)
+        .preferredColorScheme(isDarkMode ? .dark : .light)
 }
