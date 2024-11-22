@@ -89,18 +89,7 @@ struct ContentView: View {
                     .shadow(color: Color(red: 0, green: 0, blue: 0, opacity: 0.25), radius: 8, x: 0, y: 4)
                     List {
                         ForEach(items) { item in
-                            NavigationLink {
-                                Text("Item at \(item.timestamp!, formatter: itemFormatter)")
-                            } label: {
-                                VStack(alignment: .leading) {
-                                    Text(item.task ?? "No task")
-                                        .font(.headline)
-                                        .fontWeight(.bold)
-                                    Text(item.timestamp!, formatter: itemFormatter)
-                                        .font(.footnote)
-                                        .foregroundStyle(.gray)
-                                }
-                            }
+                            ListRowItemView(item: item)
                         }
                         .onDelete(perform: deleteItems)
                     }
