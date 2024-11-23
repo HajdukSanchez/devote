@@ -15,6 +15,12 @@ struct CheckboxStyle: ToggleStyle {
                 .font(.system(size: 30, weight: .semibold, design: .rounded))
                 .onTapGesture {
                     configuration.isOn.toggle()
+                    hapticFeedback.notificationOccurred(.success)
+                    if configuration.isOn {
+                        playSound(sound: AudioSoundsEnum.soundRise)
+                    } else {
+                        playSound(sound: AudioSoundsEnum.soundTap)
+                    }
                 }
             configuration.label
                 .strikethrough(configuration.isOn)

@@ -10,7 +10,6 @@ import CoreData
 
 struct ContentView: View {
     // MARK: - Properties
-    
     @AppStorage(isDarkModeKey) private var isDarkMode: Bool = false
     // Property to handle CRUD behavior with the entities
     @Environment(\.managedObjectContext) private var viewContext
@@ -35,6 +34,7 @@ struct ContentView: View {
         }
     }
     
+    // MARK: - Body
     var body: some View {
         NavigationStack {
             ZStack {
@@ -55,6 +55,8 @@ struct ContentView: View {
                             )
                         Button {
                             isDarkMode.toggle()
+                            playSound(sound: AudioSoundsEnum.soundTap)
+                            hapticFeedback.notificationOccurred(.success)
                         } label: {
                             Image(systemName: isDarkMode ? "moon.circle.fill" : "moon.circle")
                                 .resizable()
@@ -69,6 +71,8 @@ struct ContentView: View {
                         withAnimation {
                             showNewtaskItem.toggle()
                         }
+                        playSound(sound: AudioSoundsEnum.soundDing)
+                        hapticFeedback.notificationOccurred(.success)
                     } label: {
                         Image(systemName: "plus.circle")
                             .font(.system(size: 30, weight: .semibold, design: .rounded))

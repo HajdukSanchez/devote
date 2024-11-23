@@ -25,6 +25,7 @@ var backgroundGradient: LinearGradient {
 }
 
 // MARK: - UX
+let hapticFeedback = UINotificationFeedbackGenerator()
 
 // MARK: - App Storage constants
 let isDarkModeKey: String = "isDarkMode"

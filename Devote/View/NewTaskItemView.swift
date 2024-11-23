@@ -54,6 +54,8 @@ struct NewTaskItemView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 12))
                 Button {
                     addItem()
+                    playSound(sound: AudioSoundsEnum.soundDing)
+                    hapticFeedback.notificationOccurred(.success)
                 } label: {
                     Spacer()
                     Text("SAVE")
@@ -65,6 +67,11 @@ struct NewTaskItemView: View {
                 .foregroundStyle(.white)
                 .background(isButtonDisabled ? .blue: .pink)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
+                .onTapGesture {
+                    if isButtonDisabled {
+                        playSound(sound: AudioSoundsEnum.soundTap)
+                    }
+                }
             }
             .padding(.horizontal)
             .padding(.vertical, 20)
