@@ -102,18 +102,27 @@ struct ContentView: View {
                     .padding(.vertical, 0)
                     .frame(maxWidth: 640)
                 }
+                // This is for the blur effect when user opens the new task creation modal
+                .blur(radius: showNewtaskItem ? 8 : 0, opaque: false)
+                .transition(.move(edge: .bottom))
                 
                 if showNewtaskItem {
-                    BlankView()
-                        .onTapGesture {
-                            withAnimation {
-                                showNewtaskItem.toggle()
-                            }
+                    BlankView(
+                        backgroundColor: isDarkMode ? .black : .gray,
+                        backgroundOpacity: isDarkMode ? 0.3 : 0.5
+                    )
+                    .onTapGesture {
+                        withAnimation {
+                            showNewtaskItem.toggle()
                         }
+                    }
                     NewTaskItemView(isShowing: $showNewtaskItem)
                 }
             }
-            .background(BackgroundImageView())
+            .background(
+                BackgroundImageView()
+                    .blur(radius: showNewtaskItem ? 8 : 0, opaque: false)
+            )
             .background(backgroundGradient)
             .navigationTitle("Daily Tasks")
             .navigationBarTitleDisplayMode(.large)
